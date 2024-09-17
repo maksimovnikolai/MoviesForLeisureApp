@@ -15,13 +15,12 @@ enum NetworkError: Error {
     case componentsError
 }
 
-final class NetworkManager {
-    static let shared = NetworkManager()
-    
-    // MARK: - Private Init
-    
-    private init() {}
-    
+protocol NetworkManagerProtocol {
+    func fetchMovies() async throws -> MovieDocsList
+    func fetchPoster(from url: String) async throws -> Data
+}
+
+final class NetworkManager: NetworkManagerProtocol {
     // MARK: - Fetch movies
     
     func fetchMovies() async throws -> MovieDocsList {
@@ -79,7 +78,7 @@ private extension NetworkManager {
     func getQueryItems() -> [URLQueryItem] {
         [
             URLQueryItem(name: "page", value: "1"),
-            URLQueryItem(name: "limit", value: "20"),
+            URLQueryItem(name: "limit", value: "30"),
             URLQueryItem(name: "notNullFields", value: "name"),
             URLQueryItem(name: "notNullFields", value: "poster.url"),
             URLQueryItem(name: "notNullFields", value: "genres.name"),

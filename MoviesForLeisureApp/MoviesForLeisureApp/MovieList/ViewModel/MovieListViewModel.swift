@@ -17,8 +17,13 @@ final class MovieListViewModel {
     weak var view: MovieListViewProtocol?
     
     // MARK: - Private properties
-    
+    private var networkManager: NetworkManagerProtocol
     private var movies: [Movie] = []
+    
+    // MARK: - Init
+    init(networkManager: NetworkManagerProtocol) {
+        self.networkManager = networkManager
+    }
 }
 
 // MARK: - MovieListViewModelProtocol
@@ -39,7 +44,7 @@ private extension MovieListViewModel {
     func fetchMovies() {
         Task {
             do {
-                movies = try await NetworkManager.shared.fetchMovies().docs
+                movies = try await networkManager.fetchMovies().docs
                 updateView()
             } catch NetworkError.invalidURL {
                 print("invalidURL")
