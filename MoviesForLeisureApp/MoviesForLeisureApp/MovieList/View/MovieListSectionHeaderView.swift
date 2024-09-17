@@ -27,7 +27,7 @@ final class MovieListSectionHeaderView: UICollectionReusableView {
         return button
     }()
     
-    // MARK: - Life cycle
+    // MARK: - Init
     
     override init(frame: CGRect) {
         super.init(frame: frame)

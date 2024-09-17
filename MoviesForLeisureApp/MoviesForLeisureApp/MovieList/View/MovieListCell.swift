@@ -18,10 +18,11 @@ final class MovieListCell: UICollectionViewCell {
         imageView.layer.cornerRadius = 15
         imageView.clipsToBounds = true
         imageView.contentMode = .scaleAspectFill
+        // TODO: - добавить изображение по умолчанию, в случае отсутствия постера
         return imageView
     }()
     
-    // MARK: - Life cycle
+    // MARK: - Init
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -33,7 +34,7 @@ final class MovieListCell: UICollectionViewCell {
     }
     
     func configure(with model: Movie) {
-        fetchImage(from: model.poster.url)
+        fetchImage(from: model.poster.previewUrl)
     }
 }
 

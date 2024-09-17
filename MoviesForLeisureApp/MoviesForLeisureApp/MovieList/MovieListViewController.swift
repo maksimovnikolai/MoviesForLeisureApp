@@ -8,20 +8,44 @@
 import UIKit
 import SnapKit
 
-final class MovieListViewController: UIViewController {
+protocol MovieListViewProtocol: AnyObject {
+    func update(with state: MovieListViewController.State)
+}
 
+final class MovieListViewController: UIViewController {
+    // MARK: - MovieListViewDelegate
+    
+    weak var delegate: MovieListViewDelegate? {
+        get { customView.delegate }
+        set { customView.delegate = newValue }
+    }
+    
     // MARK: - Private properties
-   private let customView = MovieListView()
+    
+    private let viewModel: MovieListViewModelProtocol
+    private let customView = MovieListView()
+    
+    // MARK: Init
+    
+    init(viewModel: MovieListViewModelProtocol) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - Life cycle
     
     override func loadView() {
         view = customView
     }
     
-    // MARK: - Life cycle
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         commonInit()
+        viewModel.viewLoaded()
     }
 }
 
@@ -32,4 +56,17 @@ private extension MovieListViewController {
         navigationItem.title = "Movies"
         navigationController?.navigationBar.prefersLargeTitles = true
     }
+}
+
+// MARK: - MovieListViewProtocol
+extension MovieListViewController: MovieListViewProtocol {
+    func update(with state: State) {
+        customView.configure(with: state)
+    }
+}
+
+// MARK: Model
+
+extension MovieListViewController {
+    typealias State = MovieListView.State
 }

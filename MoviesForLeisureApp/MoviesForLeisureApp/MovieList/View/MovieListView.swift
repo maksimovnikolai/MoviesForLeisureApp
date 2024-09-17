@@ -8,51 +8,38 @@
 import UIKit
 import SnapKit
 
+protocol MovieListViewDelegate: AnyObject {}
+
 final class MovieListView: UIView {
+    typealias DataSource = UICollectionViewDiffableDataSource<SectionKind, Movie>
+    
+    // MARK: - MovieListViewDelegate
+    
+    weak var delegate: MovieListViewDelegate?
     
     // MARK: - Private properties
-    
-    private typealias DataSource = UICollectionViewDiffableDataSource<SectionKind, Movie>
     private var dataSource: DataSource!
     
-    private enum SectionKind: Int, CaseIterable {
-        case movie
-        case tvSeries
-        case cartoon
-        
-        var engTitle: String {
-            switch self {
-            case .movie:
-                return "movie"
-            case .tvSeries:
-                return "tv-series"
-            case .cartoon:
-                return "cartoon"
-            }
-        }
-    }
-    
-    private lazy var movies: [Movie] = [] {
-        didSet {
-            var snapshot = dataSource.snapshot()
-            movies.forEach { movie in
-                if movie.type == "movie" {
-                    snapshot.appendItems([movie], toSection: .movie)
-                } else if movie.type == "tv-series" {
-                    snapshot.appendItems([movie], toSection: .tvSeries)
-                } else {
-                    snapshot.appendItems([movie], toSection: .cartoon)
-                }
-            }
-            dataSource.apply(snapshot, animatingDifferences: true)
-        }
-    }
-    
     // MARK: - UI Components
+
+    private lazy var collectionView: UICollectionView = {
+        let collectionView = UICollectionView(
+            frame: .zero,
+            collectionViewLayout: createLayout()
+        )
+        collectionView.register(
+            MovieListCell.self,
+            forCellWithReuseIdentifier: MovieListCell.identifier
+        )
+        collectionView.register(
+            MovieListSectionHeaderView.self,
+            forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+            withReuseIdentifier: MovieListSectionHeaderView.identifier
+        )
+        return collectionView
+    }()
     
-    private var collectionView: UICollectionView!
-    
-    // MARK: - Life cycle
+    // MARK: - Init
     
     override init(frame: CGRect) {
         super.init(frame: .zero)
@@ -64,15 +51,41 @@ final class MovieListView: UIView {
     }
 }
 
+// MARK: - ViewModelConfigurable
+
+extension MovieListView {
+    func configure(with state: State) {
+        switch state {
+        case let .success(model):
+            print(model.movies)
+            configureSnapshot(with: model.movies)
+        case let .failure(error):
+            print(error)
+        }
+    }
+}
+
+// MARK: - Model
+
+extension MovieListView {
+    struct Model {
+        var movies: [Movie]
+    }
+    
+    enum State {
+        case success(Model)
+        case failure(Error)
+    }
+}
+
 // MARK: - Private methods
 
 private extension MovieListView {
     func commonInit() {
-        configureCollectionView()
         configureDataSource()
         setupSubviews()
         setupConstraints()
-        fetchMovies()
+        
     }
     
     func setupSubviews() {
@@ -82,20 +95,6 @@ private extension MovieListView {
     func setupConstraints() {
         collectionView.snp.makeConstraints { make in
             make.horizontalEdges.verticalEdges.equalToSuperview()
-        }
-    }
-    
-    func fetchMovies() {
-        Task {
-            do {
-                movies = try await NetworkManager.shared.fetchMovies().docs
-            } catch NetworkError.invalidURL {
-                print("invalidURL")
-            } catch NetworkError.decodingError {
-                print("decodingError")
-            } catch {
-                print("don't now what the problem")
-            }
         }
     }
 }
@@ -121,26 +120,22 @@ private extension MovieListView {
             }
             return headerView
         }
-        
+    }
+    
+    func configureSnapshot(with movies: [Movie]) {
         var snapshot = NSDiffableDataSourceSnapshot<SectionKind, Movie>()
         snapshot.appendSections([.movie, .tvSeries, .cartoon])
-        dataSource.apply(snapshot, animatingDifferences: false)
+        snapshot.appendItems(movies.map { $0 }.filter { $0.type == SectionKind.allCases[0].engTitle }, toSection: .movie)
+        snapshot.appendItems(movies.map { $0 }.filter { $0.type == SectionKind.allCases[1].engTitle }, toSection: .tvSeries)
+        snapshot.appendItems(movies.map { $0 }.filter { $0.type == SectionKind.allCases[2].engTitle }, toSection: .cartoon)
+        dataSource.apply(snapshot)
     }
+    
 }
 
 // MARK: - Configure Layout
 
 private extension MovieListView {
-    func configureCollectionView() {
-        collectionView = UICollectionView(frame: .zero, collectionViewLayout: createLayout())
-        collectionView.register(MovieListCell.self, forCellWithReuseIdentifier: MovieListCell.identifier)
-        collectionView.register(
-            MovieListSectionHeaderView.self,
-            forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
-            withReuseIdentifier: MovieListSectionHeaderView.identifier
-        )
-    }
-    
     func createLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewCompositionalLayout { sectionIndex, layoutEnvironment in
             let itemSize = NSCollectionLayoutSize(
