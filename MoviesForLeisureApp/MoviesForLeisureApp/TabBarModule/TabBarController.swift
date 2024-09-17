@@ -11,7 +11,7 @@ final class TabBarController: UITabBarController {
     
     // MARK: - Private properties
     private lazy var movieList = createRoot(
-        controller: UIViewController(),
+        controller: MovieListFactory().createModule(),
         withTitle: "Movie list",
         andSystemImage: "play.house"
     )
