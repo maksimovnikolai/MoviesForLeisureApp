@@ -55,15 +55,4 @@ private extension MovieListCell {
             make.horizontalEdges.verticalEdges.equalToSuperview()
         }
     }
-    
-    func fetchImage(from url: String) {
-        Task {
-            do {
-                let imageData = try await NetworkManager.shared.fetchPoster(from: url)
-                posterImageView.image = UIImage(data: imageData)
-            } catch {
-                print("failed to load image")
-            }
-        }
-    }
 }
