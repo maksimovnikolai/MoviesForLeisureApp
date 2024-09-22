@@ -14,7 +14,11 @@ protocol MovieListFactoryProtocol {
 struct MovieListFactory: MovieListFactoryProtocol {
     func createModule() -> UIViewController {
         let networkManager = NetworkManager()
-        let viewModel = MovieListViewModel(networkManager: networkManager)
+        let cacheManager = ImageCacheManager1()
+        let viewModel = MovieListViewModel(
+            networkManager: networkManager,
+            cacheManager: cacheManager
+        )
         let viewController = MovieListViewController(viewModel: viewModel)
         viewModel.view = viewController
         viewController.delegate = viewModel
