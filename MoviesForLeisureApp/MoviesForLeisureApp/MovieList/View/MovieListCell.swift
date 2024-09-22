@@ -33,8 +33,8 @@ final class MovieListCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(with model: Movie) {
-        fetchImage(from: model.poster.previewUrl)
+    func configure(completion: @escaping(UIImageView) -> Void) {
+        completion(posterImageView)
     }
 }
 

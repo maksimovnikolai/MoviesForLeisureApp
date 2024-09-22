@@ -8,7 +8,9 @@
 import UIKit
 import SnapKit
 
-protocol MovieListViewDelegate: AnyObject {}
+protocol MovieListViewDelegate: AnyObject {
+    func getImageData(from url: URL, completion: @escaping(Result<Data, Error>) -> Void)
+}
 
 final class MovieListView: UIView {
     typealias DataSource = UICollectionViewDiffableDataSource<SectionKind, Movie>
@@ -18,6 +20,7 @@ final class MovieListView: UIView {
     weak var delegate: MovieListViewDelegate?
     
     // MARK: - Private properties
+    
     private var dataSource: DataSource!
     
     // MARK: - UI Components
@@ -44,6 +47,7 @@ final class MovieListView: UIView {
     override init(frame: CGRect) {
         super.init(frame: .zero)
         commonInit()
+        
     }
     
     required init?(coder: NSCoder) {
@@ -57,7 +61,6 @@ extension MovieListView {
     func configure(with state: State) {
         switch state {
         case let .success(model):
-            print(model.movies)
             configureSnapshot(with: model.movies)
         case let .failure(error):
             print(error)
@@ -85,7 +88,6 @@ private extension MovieListView {
         configureDataSource()
         setupSubviews()
         setupConstraints()
-        
     }
     
     func setupSubviews() {
@@ -96,6 +98,28 @@ private extension MovieListView {
         collectionView.snp.makeConstraints { make in
             make.horizontalEdges.verticalEdges.equalToSuperview()
         }
+    }
+    
+    func configureSnapshot(with movies: [Movie]) {
+        var snapshot = NSDiffableDataSourceSnapshot<SectionKind, Movie>()
+        snapshot.appendSections([.movie])
+        snapshot.appendItems(movies)
+        dataSource.apply(snapshot)
+    }
+    
+    func updateImage(with optionalPosterURL: URL?, posterImageView: UIImageView) {
+        guard let posterURL = optionalPosterURL else { return }
+        delegate?.getImageData(from: posterURL, completion: { result in
+            switch result {
+            case let .success(data):
+                let image = UIImage(data: data)
+                if posterURL == optionalPosterURL {
+                    posterImageView.image = image
+                }
+            case let .failure(error):
+                print(error.localizedDescription)
+            }
+        })
     }
 }
 
@@ -110,7 +134,16 @@ private extension MovieListView {
             ) as? MovieListCell else {
                 return MovieListCell()
             }
-            cell.configure(with: item)
+            
+            cell.configure { posterImageView in
+                var posterURLL: URL? {
+                    didSet {
+                        posterImageView.image = nil
+                        self.updateImage(with: posterURLL, posterImageView: posterImageView)
+                    }
+                }
+                posterURLL = URL(string: item.poster.url)
+            }
             return cell
         })
         
@@ -121,16 +154,6 @@ private extension MovieListView {
             return headerView
         }
     }
-    
-    func configureSnapshot(with movies: [Movie]) {
-        var snapshot = NSDiffableDataSourceSnapshot<SectionKind, Movie>()
-        snapshot.appendSections([.movie, .tvSeries, .cartoon])
-        snapshot.appendItems(movies.map { $0 }.filter { $0.type == SectionKind.allCases[0].engTitle }, toSection: .movie)
-        snapshot.appendItems(movies.map { $0 }.filter { $0.type == SectionKind.allCases[1].engTitle }, toSection: .tvSeries)
-        snapshot.appendItems(movies.map { $0 }.filter { $0.type == SectionKind.allCases[2].engTitle }, toSection: .cartoon)
-        dataSource.apply(snapshot)
-    }
-    
 }
 
 // MARK: - Configure Layout
