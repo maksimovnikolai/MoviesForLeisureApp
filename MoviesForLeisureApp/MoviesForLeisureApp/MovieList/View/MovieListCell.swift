@@ -13,6 +13,14 @@ final class MovieListCell: UICollectionViewCell {
     
     // MARK: - UI Components
     
+    private lazy var activityIndicator: UIActivityIndicatorView = {
+        let activityIndicator = UIActivityIndicatorView(style: .large)
+        activityIndicator.color = .systemGray
+        activityIndicator.startAnimating()
+        activityIndicator.hidesWhenStopped = true
+        return activityIndicator
+    }()
+    
     private lazy var posterImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.layer.cornerRadius = 15
@@ -33,8 +41,8 @@ final class MovieListCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(completion: @escaping(UIImageView) -> Void) {
-        completion(posterImageView)
+    func configure(completion: @escaping(UIImageView, UIActivityIndicatorView) -> Void) {
+        completion(posterImageView, activityIndicator)
     }
 }
 
@@ -48,9 +56,14 @@ private extension MovieListCell {
     
     func setupSubviews() {
         addSubview(posterImageView)
+        addSubview(activityIndicator)
     }
     
     func setupConstraints() {
+        activityIndicator.snp.makeConstraints { make in
+            make.center.equalTo(posterImageView.snp.center)
+        }
+        
         posterImageView.snp.makeConstraints { make in
             make.horizontalEdges.verticalEdges.equalToSuperview()
         }

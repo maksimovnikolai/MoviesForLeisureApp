@@ -107,7 +107,7 @@ private extension MovieListView {
         dataSource.apply(snapshot)
     }
     
-    func updateImage(with optionalPosterURL: URL?, posterImageView: UIImageView) {
+    func updateImage(with optionalPosterURL: URL?, posterImageView: UIImageView, activityIndicator: UIActivityIndicatorView) {
         guard let posterURL = optionalPosterURL else { return }
         delegate?.getImageData(from: posterURL, completion: { result in
             switch result {
@@ -115,6 +115,7 @@ private extension MovieListView {
                 let image = UIImage(data: data)
                 if posterURL == optionalPosterURL {
                     posterImageView.image = image
+                    activityIndicator.stopAnimating()
                 }
             case let .failure(error):
                 print(error.localizedDescription)
@@ -135,11 +136,11 @@ private extension MovieListView {
                 return MovieListCell()
             }
             
-            cell.configure { posterImageView in
+            cell.configure { posterImageView, activityIndicator in
                 var posterURLL: URL? {
                     didSet {
                         posterImageView.image = nil
-                        self.updateImage(with: posterURLL, posterImageView: posterImageView)
+                        self.updateImage(with: posterURLL, posterImageView: posterImageView, activityIndicator: activityIndicator)
                     }
                 }
                 posterURLL = URL(string: item.poster.url)
