@@ -12,7 +12,7 @@ protocol ImageCacheManagerProtocol {
     func loadImageDataFromCache(from url: URL) -> Data?
 }
 
-final class ImageCacheManager1: ImageCacheManagerProtocol {
+final class ImageCacheManager: ImageCacheManagerProtocol {
     private let cache = NSCache<NSString, UIImage>()
     
     func saveToCache(imageData: Data, forKey url: URL) {
