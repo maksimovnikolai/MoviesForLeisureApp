@@ -17,14 +17,21 @@ final class MovieListViewModel {
     weak var view: MovieListViewProtocol?
     
     // MARK: - Private properties
+    private var router: RouterProtocol
     private var networkManager: NetworkManagerProtocol
     private var cacheManager: ImageCacheManagerProtocol
     private var movies: [Movie] = []
     
     // MARK: - Init
-    init(networkManager: NetworkManagerProtocol, cacheManager: ImageCacheManagerProtocol) {
+    
+    init(
+        networkManager: NetworkManagerProtocol,
+        cacheManager: ImageCacheManagerProtocol,
+        router: RouterProtocol
+    ) {
         self.networkManager = networkManager
         self.cacheManager = cacheManager
+        self.router = router
     }
 }
 
