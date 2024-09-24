@@ -10,6 +10,7 @@ import SnapKit
 
 protocol MovieListViewDelegate: AnyObject {
     func getImageData(from url: URL, completion: @escaping(Result<Data, Error>) -> Void)
+    func showMovieDetails(_ item: Movie)
 }
 
 final class MovieListView: UIView {
@@ -39,6 +40,7 @@ final class MovieListView: UIView {
             forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
             withReuseIdentifier: MovieListSectionHeaderView.identifier
         )
+        collectionView.delegate = self
         return collectionView
     }()
     
@@ -124,6 +126,16 @@ private extension MovieListView {
     }
 }
 
+// MARK: - UICollectionViewDelegate
+
+extension MovieListView: UICollectionViewDelegate {
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let selectedMovie = dataSource.snapshot().itemIdentifiers[indexPath.item]
+        delegate?.showMovieDetails(selectedMovie)
+    }
+}
+
 // MARK: - Configure CollectionView DataSource
 
 private extension MovieListView {
@@ -149,7 +161,11 @@ private extension MovieListView {
         })
         
         dataSource.supplementaryViewProvider = { (collectionView, kind, indexPath) in
-            guard let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: MovieListSectionHeaderView.identifier, for: indexPath) as? MovieListSectionHeaderView else {
+            guard let headerView = collectionView.dequeueReusableSupplementaryView(
+                ofKind: kind,
+                withReuseIdentifier: MovieListSectionHeaderView.identifier,
+                for: indexPath
+            ) as? MovieListSectionHeaderView else {
                 fatalError("Can't find HeaderView")
             }
             return headerView

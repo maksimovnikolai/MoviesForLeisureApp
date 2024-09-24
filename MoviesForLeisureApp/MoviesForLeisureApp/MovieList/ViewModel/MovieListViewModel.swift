@@ -46,6 +46,10 @@ extension MovieListViewModel: MovieListViewModelProtocol {
 // MARK: - MovieListViewDelegate
 
 extension MovieListViewModel: MovieListViewDelegate {
+    func showMovieDetails(_ item: Movie) {
+        router.showMovieDetails(item)
+    }
+    
     func getImageData(from url: URL, completion: @escaping(Result<Data, Error>) -> Void) {
         if let cacheImageData = cacheManager.loadImageDataFromCache(from: url) {
             completion(.success(cacheImageData))
