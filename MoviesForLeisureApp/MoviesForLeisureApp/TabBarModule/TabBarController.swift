@@ -10,8 +10,9 @@ import UIKit
 final class TabBarController: UITabBarController {
     
     // MARK: - Private properties
-    private lazy var movieList = createRoot(
-        controller: MovieListFactory().createModule(),
+    
+    private lazy var movieListModule = configureMovieListModule(
+        controller: MovieListFactory().build(),
         withTitle: "Movie list",
         andSystemImage: "play.house"
     )
@@ -28,16 +29,16 @@ final class TabBarController: UITabBarController {
 
 private extension TabBarController {
     func commonInit() {
-        setViewControllers([movieList], animated: true)
+        setViewControllers([movieListModule], animated: true)
     }
     
-    func createRoot(
+    func configureMovieListModule(
         controller: UIViewController,
         withTitle title: String,
         andSystemImage name: String
-    ) -> UINavigationController {
+    ) -> UIViewController {
         controller.title = title
         controller.tabBarItem.image = UIImage(systemName: name)
-        return UINavigationController(rootViewController: controller)
+        return controller
     }
 }
