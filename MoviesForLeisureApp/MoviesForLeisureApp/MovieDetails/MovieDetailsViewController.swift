@@ -8,8 +8,11 @@
 import UIKit
 import SnapKit
 
+protocol MovieDetailsViewProtocol: AnyObject {
+    func update(with model: MovieDetailsView.Model)
+}
+
 final class MovieDetailsViewController: UIViewController {
-    
     // MARK: - Private properties
     
     private var viewModel: MovieDetailsViewModelProtocol
@@ -27,13 +30,45 @@ final class MovieDetailsViewController: UIViewController {
     }
     
     // MARK: - Life cycle
-    
-    override func loadView() {
-        view = customView
-    }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        viewModel.viewLoaded()
+        commonInit()
+    }
+}
+
+// MARK: - MovieDetailsViewProtocol
+
+extension MovieDetailsViewController: MovieDetailsViewProtocol {
+    func update(with model: Model) {
+        customView.configure(with: model)
+    }
+}
+
+// MARK: - Model
+
+extension MovieDetailsViewController {
+    typealias Model = MovieDetailsView.Model
+}
+
+// MARK: - CommonInitProtocol
+
+extension MovieDetailsViewController: CommonInitProtocol {
+    func commonInit() {
+        navigationController?.navigationBar.topItem?.backButtonTitle = ""
+        navigationItem.title = "О фильме"
+        setupSubviews()
+        setupConstraints()
+    }
+    
+    func setupSubviews() {
+        view.addSubview(customView)
+    }
+    
+    func setupConstraints() {
+        customView.snp.makeConstraints { make in
+            make.horizontalEdges.verticalEdges.equalToSuperview()
+        }
     }
 }
