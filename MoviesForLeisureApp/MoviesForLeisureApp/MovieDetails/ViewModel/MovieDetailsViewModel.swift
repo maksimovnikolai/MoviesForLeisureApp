@@ -7,10 +7,36 @@
 
 import Foundation
 
-protocol MovieDetailsViewModelProtocol {}
+protocol MovieDetailsViewModelProtocol {
+    func viewLoaded()
+}
 
-final class MovieDetailsViewModel {}
+final class MovieDetailsViewModel {
+    weak var view: MovieDetailsViewProtocol?
+    
+    // MARK: - Private properties
+    
+    private var movie: Movie
+    
+    // MARK: - Init
+    
+    init(movie: Movie) {
+        self.movie = movie
+    }
+}
 
 // MARK: - MovieDetailsViewModelProtocol
 
-extension MovieDetailsViewModel: MovieDetailsViewModelProtocol {}
+extension MovieDetailsViewModel: MovieDetailsViewModelProtocol {
+    func viewLoaded() {
+        updateView()
+    }
+}
+
+// MARK: - Private methods
+
+private extension MovieDetailsViewModel {
+    func updateView() {
+        view?.update(with: .init(movieTitle: movie.name, movieDescription: movie.description ?? "- отсутствует"))
+    }
+}
