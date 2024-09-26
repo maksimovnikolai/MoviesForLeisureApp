@@ -8,7 +8,15 @@
 import UIKit
 import SnapKit
 
+protocol MovieDetailsViewDelegate: RatingAndTrailerButtonViewDelegate {}
+
 final class MovieDetailsView: UIView {
+    weak var delegate: MovieDetailsViewDelegate? {
+        didSet {
+            buttonsView.delegate = delegate
+        }
+    }
+    
     // MARK: - UI components
     
     private lazy var scrollView: UIScrollView = {
@@ -16,15 +24,23 @@ final class MovieDetailsView: UIView {
         return scrollView
     }()
     
-    private lazy var stackView: UIStackView = {
+    private lazy var mainStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.spacing = 10
         stackView.axis = .vertical
         return stackView
     }()
     
+    private lazy var horizontalStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.spacing = 10
+        return stackView
+    }()
+    
     private let posterView = MoviePosterView()
-    private var descriptionView = MovieDescriptionView()
+    private let buttonsView = RatingAndTrailerButtonView()
+    private let descriptionView = MovieDescriptionView()
 
     // MARK: - Init
     
@@ -55,19 +71,36 @@ extension MovieDetailsView {
     }
 }
 
-// MARK: - CommonInitProtocol
+// MARK: - Private methods
 
-extension MovieDetailsView: CommonInitProtocol {
+private extension MovieDetailsView {
+    func configureMainStackView() {
+        [horizontalStackView, descriptionView].forEach {
+            mainStackView.addArrangedSubview($0)
+        }
+    }
+    
+    func configureHorizontalStackView() {
+        [posterView, buttonsView].forEach {
+            horizontalStackView.addArrangedSubview($0)
+        }
+    }
+}
+
+// MARK: - Constraints
+
+private extension MovieDetailsView {
     func commonInit() {
         backgroundColor = .systemBackground
+        configureHorizontalStackView()
+        configureMainStackView()
         setupSubviews()
         setupConstraints()
     }
     
     func setupSubviews() {
-        [posterView, descriptionView].forEach { stackView.addArrangedSubview($0) }
         addSubview(scrollView)
-        scrollView.addSubview(stackView)
+        scrollView.addSubview(mainStackView)
     }
     
     func setupConstraints() {
@@ -76,10 +109,10 @@ extension MovieDetailsView: CommonInitProtocol {
             make.leading.equalToSuperview()
             make.trailing.equalToSuperview()
             make.bottom.equalTo(safeAreaLayoutGuide)
-            make.width.equalTo(stackView.snp.width)
+            make.width.equalTo(mainStackView.snp.width)
         }
         
-        stackView.snp.makeConstraints { make in
+        mainStackView.snp.makeConstraints { make in
             make.horizontalEdges.verticalEdges.equalTo(scrollView)
         }
         
