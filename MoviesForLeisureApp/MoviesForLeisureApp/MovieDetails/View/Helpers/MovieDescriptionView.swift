@@ -32,27 +32,6 @@ final class MovieDescriptionView: UIView {
     }
 }
 
-// MARK: - CommonInitProtocol
-
-extension MovieDescriptionView: CommonInitProtocol {
-    func commonInit() {
-        setupSubviews()
-        setupConstraints()
-    }
-    
-    func setupSubviews() {
-        addSubview(stackView)
-    }
-    
-    func setupConstraints() {
-        stackView.snp.makeConstraints { make in
-            make.verticalEdges.equalToSuperview()
-            make.leading.equalToSuperview().offset(16)
-            make.trailing.equalToSuperview().inset(16)
-        }
-    }
-}
-
 // MARK: - Private methods
 
 private extension MovieDescriptionView {
@@ -69,5 +48,26 @@ private extension MovieDescriptionView {
         label.numberOfLines = 0
         label.font = UIFont.preferredFont(forTextStyle: .headline)
         return label
+    }
+}
+
+// MARK: - Constraints
+
+private extension MovieDescriptionView {
+    func commonInit() {
+        setupSubviews()
+        setupConstraints()
+    }
+    
+    func setupSubviews() {
+        addSubview(stackView)
+    }
+    
+    func setupConstraints() {
+        stackView.snp.makeConstraints { make in
+            make.verticalEdges.equalToSuperview()
+            make.leading.equalToSuperview().offset(16)
+            make.trailing.equalToSuperview().inset(16)
+        }
     }
 }
