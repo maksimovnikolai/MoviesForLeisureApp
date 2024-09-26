@@ -20,8 +20,6 @@ final class MoviePosterView: UIView {
         return imageView
     }()
     
-    // TODO: - Добавить справа от постера: rating, year, youtube trailer button
-    
     // MARK: - Init
         
     override init(frame: CGRect) {
@@ -34,9 +32,9 @@ final class MoviePosterView: UIView {
     }
 }
 
-// MARK: - CommonInitProtocol
+// MARK: - Constraints
 
-extension MoviePosterView: CommonInitProtocol {
+private extension MoviePosterView {
     func commonInit() {
         setupSubviews()
         setupConstraints()
@@ -49,9 +47,10 @@ extension MoviePosterView: CommonInitProtocol {
     func setupConstraints() {
         let width = (UIScreen.main.bounds.width / 2) - 20
         posterImageView.snp.makeConstraints { make in
-            make.top.equalTo(snp.top).offset(10)
-            make.bottom.equalTo(snp.bottom).inset(10)
+            make.top.equalToSuperview()
             make.leading.equalToSuperview().inset(16)
+            make.trailing.equalToSuperview()
+            make.bottom.equalToSuperview()
             make.width.equalTo(width)
         }
     }
