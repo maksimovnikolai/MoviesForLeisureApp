@@ -12,6 +12,8 @@ protocol MovieDetailsViewModelProtocol {
 }
 
 final class MovieDetailsViewModel {
+    // MARK: Delegate
+    
     weak var view: MovieDetailsViewProtocol?
     
     // MARK: - Private properties
@@ -23,6 +25,15 @@ final class MovieDetailsViewModel {
     init(movie: Movie) {
         self.movie = movie
     }
+}
+
+// MARK: - MovieDetailsViewDelegate
+
+extension MovieDetailsViewModel: MovieDetailsViewDelegate {
+    // TODO: реализовать логику просмотра трейлера и фильма 
+    func showTrailer() {}
+    
+    func showMovie() {}
 }
 
 // MARK: - MovieDetailsViewModelProtocol

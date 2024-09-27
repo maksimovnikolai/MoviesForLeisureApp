@@ -13,6 +13,11 @@ protocol MovieDetailsViewProtocol: AnyObject {
 }
 
 final class MovieDetailsViewController: UIViewController {
+    weak var delegate: MovieDetailsViewDelegate? {
+        get { customView.delegate }
+        set { customView.delegate = newValue }
+    }
+    
     // MARK: - Private properties
     
     private var viewModel: MovieDetailsViewModelProtocol

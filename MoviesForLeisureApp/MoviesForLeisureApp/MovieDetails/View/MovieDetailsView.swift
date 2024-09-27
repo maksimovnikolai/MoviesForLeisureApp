@@ -40,6 +40,8 @@ final class MovieDetailsView: UIView {
     
     private let posterView = MoviePosterView()
     private let buttonsView = RatingAndTrailerButtonView()
+    private let actorsHeaderView = ActorsSectionHeaderView()
+    private let actorsView = ActorsView()
     private let descriptionView = MovieDescriptionView()
 
     // MARK: - Init
@@ -75,7 +77,7 @@ extension MovieDetailsView {
 
 private extension MovieDetailsView {
     func configureMainStackView() {
-        [horizontalStackView, descriptionView].forEach {
+        [horizontalStackView, actorsHeaderView, actorsView, descriptionView].forEach {
             mainStackView.addArrangedSubview($0)
         }
     }
@@ -112,12 +114,16 @@ private extension MovieDetailsView {
             make.width.equalTo(mainStackView.snp.width)
         }
         
-        mainStackView.snp.makeConstraints { make in
-            make.horizontalEdges.verticalEdges.equalTo(scrollView)
+        actorsView.snp.makeConstraints { make in
+            make.height.equalTo(130)
         }
         
         posterView.snp.makeConstraints { make in
             make.height.equalTo(250)
+        }
+        
+        mainStackView.snp.makeConstraints { make in
+            make.horizontalEdges.verticalEdges.equalTo(scrollView)
         }
     }
 }
