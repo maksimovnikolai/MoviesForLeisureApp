@@ -61,6 +61,7 @@ final class MovieDetailsView: UIView {
 extension MovieDetailsView {
     func configure(with model: Model) {
         descriptionView.configure(model: model.descriptionViewModel)
+        buttonsView.configure(with: model.ratingAndYearViewModel)
     }
 }
 
@@ -69,6 +70,7 @@ extension MovieDetailsView {
 extension MovieDetailsView {
     struct Model {
         let descriptionViewModel: MovieDescriptionView.Model
+        let ratingAndYearViewModel: RatingAndTrailerButtonView.Model
     }
 }
 

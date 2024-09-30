@@ -48,8 +48,19 @@ extension MovieDetailsViewModel: MovieDetailsViewModelProtocol {
 
 private extension MovieDetailsViewModel {
     func updateView() {
-        let movieDescriptionViewModel = MovieDescriptionView.Model(title: movie.name, description: movie.description ?? "")
-        let detailsViewModel = MovieDetailsView.Model(descriptionViewModel: movieDescriptionViewModel)
+        let movieDescriptionViewModel = MovieDescriptionView.Model(
+            title: movie.name,
+            description: movie.description ?? ""
+        )
+        let movieRatingAndYearViewModel = RatingAndTrailerButtonView.Model(
+            year: "\(movie.year ?? 0)",
+            rating: "\(movie.rating?.imdb ?? 0.00)",
+            genre: movie.genres.first?.name ?? "-"
+        )
+        let detailsViewModel = MovieDetailsView.Model(
+            descriptionViewModel: movieDescriptionViewModel,
+            ratingAndYearViewModel: movieRatingAndYearViewModel
+        )
         view?.update(with: detailsViewModel)
     }
 }

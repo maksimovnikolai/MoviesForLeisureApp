@@ -28,8 +28,8 @@ final class RatingAndTrailerButtonView: UIView {
     
     private lazy var labelsStackView = makeStackView(
         spacing: 10,
-        distribution: .fillProportionally,
-        subviews: [yearLabel, ratingLabel]
+        distribution: .equalSpacing,
+        subviews: [yearLabel, ratingLabel, genreLabel]
     )
     
     private lazy var buttonsStackView = makeStackView(
@@ -40,6 +40,7 @@ final class RatingAndTrailerButtonView: UIView {
     
     private lazy var yearLabel: UILabel = makeLabel()
     private lazy var ratingLabel: UILabel = makeLabel()
+    private lazy var genreLabel: UILabel = makeLabel()
 
     private lazy var showTrailerButton: UIButton = makeButton(
         with: "Смотреть трейлер",
@@ -60,6 +61,26 @@ final class RatingAndTrailerButtonView: UIView {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+}
+
+// MARK: - ViewModelConfigurable
+
+extension RatingAndTrailerButtonView {
+    func configure(with model: Model) {
+        yearLabel.text = "Год: \(model.year)"
+        ratingLabel.text = "Рейтинг: \(model.rating)"
+        genreLabel.text = "Жанр: \(model.genre)"
+    }
+}
+
+// MARK: - Model
+
+extension RatingAndTrailerButtonView {
+    struct Model {
+        let year: String
+        let rating: String
+        let genre: String
     }
 }
 
@@ -89,6 +110,7 @@ private extension RatingAndTrailerButtonView {
     
     func makeLabel() -> UILabel {
         let label = UILabel()
+        label.numberOfLines = 0
         label.font = .preferredFont(forTextStyle: .headline)
         return label
     }
