@@ -47,7 +47,14 @@ extension MovieDetailsViewModel: MovieDetailsViewModelProtocol {
 // MARK: - Private methods
 
 private extension MovieDetailsViewModel {
+    func getMoviePosterURL() -> URL? {
+        // TODO: - загружать изображение из кеша, а случае его отсутствия, выполнять запрос
+        guard let url = URL(string: movie.poster.url) else { return nil }
+        return url
+    }
+    
     func updateView() {
+        let posterViewModel = MoviePosterView.Model(imageURL: getMoviePosterURL()!)
         let movieDescriptionViewModel = MovieDescriptionView.Model(
             title: movie.name,
             description: movie.description ?? ""
@@ -58,6 +65,7 @@ private extension MovieDetailsViewModel {
             genre: movie.genres.first?.name ?? "-"
         )
         let detailsViewModel = MovieDetailsView.Model(
+            posterViewModel: posterViewModel,
             descriptionViewModel: movieDescriptionViewModel,
             ratingAndYearViewModel: movieRatingAndYearViewModel
         )
