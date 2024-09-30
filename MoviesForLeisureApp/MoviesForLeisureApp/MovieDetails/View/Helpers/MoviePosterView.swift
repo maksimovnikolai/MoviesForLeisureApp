@@ -12,10 +12,15 @@ final class MoviePosterView: UIView {
     // MARK: - UI components
     
     // TODO: -
-    // добавить спинер загрузки изображения
     // добавить дефолтное изображение, для случая ошибки загрузки постера
     
-    private var posterImageView: UIImageView = {
+    private lazy var activityIndicatorView: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView(style: .large)
+        indicator.hidesWhenStopped = true
+        return indicator
+    }()
+    
+    private lazy var posterImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleToFill
         imageView.clipsToBounds = true
@@ -28,6 +33,7 @@ final class MoviePosterView: UIView {
         
     override init(frame: CGRect) {
         super.init(frame: frame)
+        activityIndicatorView.startAnimating()
         commonInit()
     }
     
@@ -60,6 +66,7 @@ private extension MoviePosterView {
             let data = try? Data(contentsOf: url)
             DispatchQueue.main.async {
                 if let data {
+                    self.activityIndicatorView.stopAnimating()
                     self.posterImageView.image = UIImage(data: data)
                 }
             }
@@ -77,6 +84,7 @@ private extension MoviePosterView {
     
     func setupSubviews() {
         addSubview(posterImageView)
+        posterImageView.addSubview(activityIndicatorView)
     }
     
     func setupConstraints() {
@@ -87,6 +95,10 @@ private extension MoviePosterView {
             make.trailing.equalToSuperview()
             make.bottom.equalToSuperview()
             make.width.equalTo(width)
+        }
+        
+        activityIndicatorView.snp.makeConstraints { make in
+            make.center.equalToSuperview()
         }
     }
 }
