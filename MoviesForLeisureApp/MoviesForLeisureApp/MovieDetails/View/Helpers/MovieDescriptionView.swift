@@ -25,10 +25,23 @@ final class MovieDescriptionView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    func configure(title: String, description: String) {
-        movieNameLabel.text = "Название:\n\(title)"
-        movieDescriptionLabel.text = "Сюжет:\n\(description)"
+}
+
+// MARK: - ViewModelConfigurable
+
+extension MovieDescriptionView {
+    func configure(model: Model) {
+        movieNameLabel.text = "Название:\n\(model.title)"
+        movieDescriptionLabel.text = "Сюжет:\n\(model.description)"
+    }
+}
+
+// MARK: - Model
+
+extension MovieDescriptionView {
+    struct Model {
+        let title: String
+        let description: String
     }
 }
 

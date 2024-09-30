@@ -60,7 +60,7 @@ final class MovieDetailsView: UIView {
 
 extension MovieDetailsView {
     func configure(with model: Model) {
-        descriptionView.configure(title: model.movieTitle, description: model.movieDescription)
+        descriptionView.configure(model: model.descriptionViewModel)
     }
 }
 
@@ -68,8 +68,7 @@ extension MovieDetailsView {
 
 extension MovieDetailsView {
     struct Model {
-        var movieTitle: String
-        var movieDescription: String
+        let descriptionViewModel: MovieDescriptionView.Model
     }
 }
 

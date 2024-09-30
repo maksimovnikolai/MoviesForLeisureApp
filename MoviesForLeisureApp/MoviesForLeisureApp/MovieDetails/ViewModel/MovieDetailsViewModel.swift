@@ -48,6 +48,8 @@ extension MovieDetailsViewModel: MovieDetailsViewModelProtocol {
 
 private extension MovieDetailsViewModel {
     func updateView() {
-        view?.update(with: .init(movieTitle: movie.name, movieDescription: movie.description ?? "- отсутствует"))
+        let movieDescriptionViewModel = MovieDescriptionView.Model(title: movie.name, description: movie.description ?? "")
+        let detailsViewModel = MovieDetailsView.Model(descriptionViewModel: movieDescriptionViewModel)
+        view?.update(with: detailsViewModel)
     }
 }
