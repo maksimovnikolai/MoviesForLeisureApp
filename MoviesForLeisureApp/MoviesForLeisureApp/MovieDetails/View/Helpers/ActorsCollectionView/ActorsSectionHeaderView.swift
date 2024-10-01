@@ -47,7 +47,7 @@ private extension ActorsSectionHeaderView {
     func setupConstraints() {
         titleLabel.snp.makeConstraints { make in
             make.verticalEdges.equalToSuperview()
-            make.leading.trailing.equalToSuperview().inset(16)
+            make.leading.trailing.equalToSuperview()
         }
     }
 }

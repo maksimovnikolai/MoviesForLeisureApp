@@ -21,6 +21,7 @@ final class MovieDetailsView: UIView {
     
     private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
+        scrollView.showsVerticalScrollIndicator = false
         return scrollView
     }()
     
@@ -31,15 +32,21 @@ final class MovieDetailsView: UIView {
         return stackView
     }()
     
-    private lazy var horizontalStackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.axis = .horizontal
-        stackView.spacing = 10
-        return stackView
+    private lazy var titleStackView: UIStackView = makeStackView(with: .vertical, spacing: 0)
+    
+    private lazy var titleLabel: UILabel = {
+       let label = UILabel()
+        label.text = "Movie TITLE"
+        label.font = .systemFont(ofSize: 24)
+        label.numberOfLines = 0
+        return label
     }()
     
+    private lazy var horizontalStackView: UIStackView = makeStackView(with: .horizontal, spacing: 10)
     private let posterView = MoviePosterView()
     private let buttonsView = RatingAndTrailerButtonView()
+    
+    private lazy var verticalStackView: UIStackView = makeStackView(with: .vertical, spacing: 0)
     private let actorsHeaderView = ActorsSectionHeaderView()
     private let actorsView = ActorsView()
     private let descriptionView = MovieDescriptionView()
@@ -60,6 +67,7 @@ final class MovieDetailsView: UIView {
 
 extension MovieDetailsView {
     func configure(with model: Model) {
+        titleLabel.text = model.movieTitle
         posterView.configure(with: model.posterViewModel)
         descriptionView.configure(model: model.descriptionViewModel)
         buttonsView.configure(with: model.ratingAndYearViewModel)
@@ -70,6 +78,7 @@ extension MovieDetailsView {
 
 extension MovieDetailsView {
     struct Model {
+        let movieTitle: String
         let posterViewModel: MoviePosterView.Model
         let descriptionViewModel: MovieDescriptionView.Model
         let ratingAndYearViewModel: RatingAndTrailerButtonView.Model
@@ -79,8 +88,21 @@ extension MovieDetailsView {
 // MARK: - Private methods
 
 private extension MovieDetailsView {
+    func makeStackView(with axis: NSLayoutConstraint.Axis, spacing: CGFloat) -> UIStackView {
+        let stackView = UIStackView()
+        stackView.axis = axis
+        stackView.spacing = spacing
+        stackView.layoutMargins = .init(top: 0, left: 16, bottom: 0, right: 16)
+        stackView.isLayoutMarginsRelativeArrangement = true
+        return stackView
+    }
+    
+    func configureTitleStackView() {
+        titleStackView.addArrangedSubview(titleLabel)
+    }
+    
     func configureMainStackView() {
-        [horizontalStackView, actorsHeaderView, actorsView, descriptionView].forEach {
+        [titleStackView, horizontalStackView, verticalStackView].forEach {
             mainStackView.addArrangedSubview($0)
         }
     }
@@ -90,6 +112,12 @@ private extension MovieDetailsView {
             horizontalStackView.addArrangedSubview($0)
         }
     }
+    
+    func configureVerticalStackView() {
+        [actorsHeaderView, actorsView, descriptionView].forEach {
+            verticalStackView.addArrangedSubview($0)
+        }
+    }
 }
 
 // MARK: - Constraints
@@ -97,6 +125,8 @@ private extension MovieDetailsView {
 private extension MovieDetailsView {
     func commonInit() {
         backgroundColor = .systemBackground
+        configureTitleStackView()
+        configureVerticalStackView()
         configureHorizontalStackView()
         configureMainStackView()
         setupSubviews()

@@ -91,7 +91,7 @@ private extension MoviePosterView {
         let width = (UIScreen.main.bounds.width / 2) - 20
         posterImageView.snp.makeConstraints { make in
             make.top.equalToSuperview()
-            make.leading.equalToSuperview().inset(16)
+            make.leading.equalToSuperview()
             make.trailing.equalToSuperview()
             make.bottom.equalToSuperview()
             make.width.equalTo(width)

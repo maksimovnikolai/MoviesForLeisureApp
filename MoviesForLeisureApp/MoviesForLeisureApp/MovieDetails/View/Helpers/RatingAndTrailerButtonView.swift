@@ -70,7 +70,7 @@ extension RatingAndTrailerButtonView {
     func configure(with model: Model) {
         yearLabel.text = "Год: \(model.year)"
         ratingLabel.text = "Рейтинг: \(model.rating)"
-        genreLabel.text = "Жанр: \(model.genre)"
+        genreLabel.text = "Жанр:\n\(model.genre)"
     }
 }
 
@@ -145,7 +145,7 @@ private extension RatingAndTrailerButtonView {
         
         mainStackView.snp.makeConstraints { make in
             make.verticalEdges.equalToSuperview()
-            make.trailing.equalToSuperview().inset(16)
+            make.trailing.equalToSuperview()
         }
     }
 }

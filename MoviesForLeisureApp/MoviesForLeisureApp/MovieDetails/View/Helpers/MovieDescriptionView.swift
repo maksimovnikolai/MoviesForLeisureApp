@@ -11,9 +11,8 @@ import SnapKit
 final class MovieDescriptionView: UIView {
     // MARK: - UI components
     
-    private lazy var movieNameLabel: UILabel = getLabel()
-    private lazy var movieDescriptionLabel: UILabel = getLabel()
     private lazy var stackView: UIStackView = getStackView()
+    private lazy var movieDescriptionLabel: UILabel = getLabel()
     
     // MARK: Init
     
@@ -31,7 +30,6 @@ final class MovieDescriptionView: UIView {
 
 extension MovieDescriptionView {
     func configure(model: Model) {
-        movieNameLabel.text = "Название:\n\(model.title)"
         movieDescriptionLabel.text = "Сюжет:\n\(model.description)"
     }
 }
@@ -40,7 +38,6 @@ extension MovieDescriptionView {
 
 extension MovieDescriptionView {
     struct Model {
-        let title: String
         let description: String
     }
 }
@@ -52,7 +49,7 @@ private extension MovieDescriptionView {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.spacing = 10
-        [movieNameLabel, movieDescriptionLabel].forEach { stackView.addArrangedSubview($0) }
+        [movieDescriptionLabel].forEach { stackView.addArrangedSubview($0) }
         return stackView
     }
     
@@ -79,8 +76,7 @@ private extension MovieDescriptionView {
     func setupConstraints() {
         stackView.snp.makeConstraints { make in
             make.verticalEdges.equalToSuperview()
-            make.leading.equalToSuperview().offset(16)
-            make.trailing.equalToSuperview().inset(16)
+            make.leading.trailing.equalToSuperview()
         }
     }
 }

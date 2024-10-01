@@ -56,7 +56,6 @@ private extension MovieDetailsViewModel {
     func updateView() {
         let posterViewModel = MoviePosterView.Model(imageURL: getMoviePosterURL()!)
         let movieDescriptionViewModel = MovieDescriptionView.Model(
-            title: movie.name,
             description: movie.description ?? ""
         )
         let movieRatingAndYearViewModel = RatingAndTrailerButtonView.Model(
@@ -65,6 +64,7 @@ private extension MovieDetailsViewModel {
             genre: movie.genres.first?.name ?? "-"
         )
         let detailsViewModel = MovieDetailsView.Model(
+            movieTitle: movie.name,
             posterViewModel: posterViewModel,
             descriptionViewModel: movieDescriptionViewModel,
             ratingAndYearViewModel: movieRatingAndYearViewModel
