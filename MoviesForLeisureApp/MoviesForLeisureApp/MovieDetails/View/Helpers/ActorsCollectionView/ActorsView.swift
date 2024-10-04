@@ -8,8 +8,14 @@
 import UIKit
 import SnapKit
 
+protocol ActorsViewDelegate: AnyObject {
+    func numbersOfItemInSection() -> Int
+    func configureActorsCellViewModel(at indexPath: IndexPath) -> ActorsViewCell.Model
+}
+
 final class ActorsView: UIView {
     // TODO: - написать логику обновления данных
+    weak var delegate: ActorsViewDelegate?
     
     // MARK: - UI components
     
