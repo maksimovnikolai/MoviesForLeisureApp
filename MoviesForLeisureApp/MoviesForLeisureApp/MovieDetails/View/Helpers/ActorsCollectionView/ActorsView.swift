@@ -46,13 +46,14 @@ final class ActorsView: UIView {
 
 extension ActorsView: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        5
+        delegate?.numbersOfItemInSection() ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ActorsViewCell.identifier, for: indexPath) as? ActorsViewCell else {
             return UICollectionViewCell()
         }
+        cell.configure(with: delegate?.configureActorsCellViewModel(at: indexPath))
         return cell
     }
 }

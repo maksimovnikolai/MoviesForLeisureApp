@@ -8,12 +8,13 @@
 import UIKit
 import SnapKit
 
-protocol MovieDetailsViewDelegate: RatingAndTrailerButtonViewDelegate {}
+protocol MovieDetailsViewDelegate: RatingAndTrailerButtonViewDelegate, ActorsViewDelegate {}
 
 final class MovieDetailsView: UIView {
     weak var delegate: MovieDetailsViewDelegate? {
         didSet {
             buttonsView.delegate = delegate
+            actorsView.delegate = delegate
         }
     }
     

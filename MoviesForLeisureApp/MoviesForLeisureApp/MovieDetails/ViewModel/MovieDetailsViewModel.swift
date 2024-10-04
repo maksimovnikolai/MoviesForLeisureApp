@@ -34,6 +34,14 @@ extension MovieDetailsViewModel: MovieDetailsViewDelegate {
     func showTrailer() {}
     
     func showMovie() {}
+    
+    func configureActorsCellViewModel(at indexPath: IndexPath) -> ActorsViewCell.Model {
+        actorsViewCellModel(at: indexPath)
+    }
+    
+    func numbersOfItemInSection() -> Int {
+        movie.persons.count
+    }
 }
 
 // MARK: - MovieDetailsViewModelProtocol
@@ -49,8 +57,18 @@ extension MovieDetailsViewModel: MovieDetailsViewModelProtocol {
 private extension MovieDetailsViewModel {
     func getMoviePosterURL() -> URL? {
         // TODO: - загружать изображение из кеша, а случае его отсутствия, выполнять запрос
-        guard let url = URL(string: movie.poster.url) else { return nil }
+        guard let url = URL(string: movie.poster?.url ?? "") else { return nil }
         return url
+    }
+    
+    func actorsViewCellModel(at indexPath: IndexPath) -> ActorsViewCell.Model {
+        let actorName = movie.persons[indexPath.item].name ?? ""
+        // TODO: - реализовать загрузку изображения актера
+        let imageData = Data()
+        return ActorsViewCell.Model(
+            actorName: actorName,
+            actorImageData: imageData
+        )
     }
     
     func updateView() {
