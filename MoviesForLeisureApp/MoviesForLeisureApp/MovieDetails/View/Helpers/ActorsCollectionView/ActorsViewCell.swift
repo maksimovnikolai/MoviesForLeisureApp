@@ -23,6 +23,8 @@ final class ActorsViewCell: UICollectionViewCell {
     private lazy var actorNameLabel: UILabel = {
         let label = UILabel()
         label.text = "Actor Name"
+        label.textAlignment = .center
+        label.numberOfLines = 0
         return label
     }()
     
@@ -35,6 +37,25 @@ final class ActorsViewCell: UICollectionViewCell {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+}
+
+// MARK: - ViewModelConfigurable
+
+extension ActorsViewCell {
+    func configure(with model: Model?) {
+        if let model {
+            // TODO: Реализовать загрузку изображения актера
+            actorNameLabel.text = model.actorName
+        }
+    }
+}
+
+// MARK: - Model
+extension ActorsViewCell {
+    struct Model {
+        let actorName: String
+        let actorImageData: Data
     }
 }
 
