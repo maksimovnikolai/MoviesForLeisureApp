@@ -24,7 +24,7 @@ final class NetworkManager: NetworkManagerProtocol {
     // MARK: - Fetch movies
     
     func fetchMovies() async throws -> MovieDocsList {
-        guard let url = URL(string: MovieAPI.baseURL) else { throw NetworkError.invalidURL }
+        guard let url = URL(string: APIHelper.moviesURL) else { throw NetworkError.invalidURL }
         
         guard var components = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
             throw NetworkError.componentsError
@@ -82,10 +82,6 @@ private extension NetworkManager {
         [
             URLQueryItem(name: "page", value: "1"),
             URLQueryItem(name: "limit", value: "30"),
-            URLQueryItem(name: "notNullFields", value: "name"),
-            URLQueryItem(name: "notNullFields", value: "poster.url"),
-            URLQueryItem(name: "notNullFields", value: "genres.name"),
-            URLQueryItem(name: "notNullFields", value: "type"),
         ]
     }
 }

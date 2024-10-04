@@ -78,7 +78,7 @@ private extension MovieDetailsViewModel {
         )
         let movieRatingAndYearViewModel = RatingAndTrailerButtonView.Model(
             year: "\(movie.year ?? 0)",
-            rating: "\(movie.rating?.imdb ?? 0.00)",
+            rating: "\(movie.rating.imdb)",
             genre: movie.genres.first?.name ?? "-"
         )
         let detailsViewModel = MovieDetailsView.Model(

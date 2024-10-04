@@ -39,7 +39,7 @@ final class MovieDetailsView: UIView {
        let label = UILabel()
         label.text = "Movie TITLE"
         label.font = .systemFont(ofSize: 24)
-        label.numberOfLines = 0
+        label.numberOfLines = 2
         return label
     }()
     
@@ -149,7 +149,7 @@ private extension MovieDetailsView {
         }
         
         actorsView.snp.makeConstraints { make in
-            make.height.equalTo(130)
+            make.height.equalTo(155)
         }
         
         posterView.snp.makeConstraints { make in

@@ -155,7 +155,7 @@ private extension MovieListView {
                         self.updateImage(with: posterURLL, posterImageView: posterImageView, activityIndicator: activityIndicator)
                     }
                 }
-                posterURLL = URL(string: item.poster.url)
+                posterURLL = URL(string: item.poster?.url ?? "")
             }
             return cell
         })
