@@ -14,11 +14,12 @@ struct MovieDocsList: Decodable, Hashable {
 struct Movie: Decodable, Hashable {
     let id: Int
     let name: String
-    let year: Int
-    let type: String
+    let year: Int?
+    let description: String?
     let rating: Rating
-    let poster: Poster
+    let poster: Poster?
     let genres: [Genre]
+    let persons: [Person]
 }
 
 struct Rating: Decodable, Hashable {
@@ -32,4 +33,10 @@ struct Poster: Decodable, Hashable {
 
 struct Genre: Decodable, Hashable {
     let name: String
+}
+
+struct Person: Decodable, Hashable {
+    let id: Int
+    let photo: String
+    let name: String?
 }
