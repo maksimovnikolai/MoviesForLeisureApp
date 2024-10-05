@@ -15,7 +15,7 @@ final class ActorsViewCell: UICollectionViewCell {
     
     private lazy var actorImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.backgroundColor = .blue
+        imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         return imageView
     }()
@@ -45,8 +45,8 @@ final class ActorsViewCell: UICollectionViewCell {
 extension ActorsViewCell {
     func configure(with model: Model?) {
         if let model {
-            // TODO: Реализовать загрузку изображения актера
             actorNameLabel.text = model.actorName
+            setupActorImage(from: model.actorImageURL)
         }
     }
 }
@@ -55,16 +55,26 @@ extension ActorsViewCell {
 extension ActorsViewCell {
     struct Model {
         let actorName: String
-        let actorImageData: Data
+        let actorImageURL: String
     }
 }
 
 // MARK: - Private methods
 
 private extension ActorsViewCell {
-    private func configureImageView() {
+    func configureImageView() {
         layoutIfNeeded()
         actorImageView.layer.cornerRadius = actorImageView.bounds.size.width / 2
+    }
+    
+    func setupActorImage(from urlString: String) {
+        guard let url = URL(string: urlString) else { return }
+        DispatchQueue.global().async {
+            guard let imageData = try? Data(contentsOf: url) else { return }
+            DispatchQueue.main.async {
+                self.actorImageView.image = UIImage(data: imageData)
+            }
+        }
     }
 }
 

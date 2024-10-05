@@ -62,12 +62,10 @@ private extension MovieDetailsViewModel {
     }
     
     func actorsViewCellModel(at indexPath: IndexPath) -> ActorsViewCell.Model {
-        let actorName = movie.persons[indexPath.item].name ?? ""
-        // TODO: - реализовать загрузку изображения актера
-        let imageData = Data()
+        let person = movie.persons[indexPath.item]
         return ActorsViewCell.Model(
-            actorName: actorName,
-            actorImageData: imageData
+            actorName: person.name ?? "-",
+            actorImageURL: person.photo
         )
     }
     
